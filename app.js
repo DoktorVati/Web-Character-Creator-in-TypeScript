@@ -20,14 +20,47 @@ var CharacterManager = /** @class */ (function () {
     };
     CharacterManager.prototype.setupEventListeners = function () {
         var _this = this;
-        var _a;
+        var _a, _b;
         (_a = document.getElementById('user-form')) === null || _a === void 0 ? void 0 : _a.addEventListener('submit', function (e) { return _this.handleFormSubmit(e); });
         this.selectElement.addEventListener('change', function () { return _this.handleCharacterSelect(); });
         this.deleteButton.addEventListener('click', function () { return _this.deleteCurrentCharacter(); });
         this.clearButton.addEventListener('click', function () { return _this.clearDisplay(); });
+        (_b = document.getElementById('character-image')) === null || _b === void 0 ? void 0 : _b.addEventListener('change', function (e) { return _this.handleImageUpload(e); });
+    };
+    CharacterManager.prototype.handleImageUpload = function (e) {
+        var _this = this;
+        var _a;
+        var input = e.target;
+        var file = (_a = input.files) === null || _a === void 0 ? void 0 : _a[0];
+        if (!file)
+            return;
+        var reader = new FileReader();
+        reader.onload = function (event) {
+            var _a;
+            var imageData = (_a = event.target) === null || _a === void 0 ? void 0 : _a.result;
+            var preview = document.getElementById('image-preview');
+            preview.style.backgroundImage = "url(".concat(imageData, ")");
+            //create a temporary character if none exists
+            if (!_this.currentCharacter) {
+                _this.currentCharacter = {
+                    id: Date.now().toString(),
+                    firstName: '',
+                    lastName: '',
+                    image: imageData
+                };
+            }
+            else {
+                _this.currentCharacter.image = imageData;
+            }
+            // Save immediately if character has name, otherwise wait for form submit
+            if (_this.currentCharacter.firstName && _this.currentCharacter.lastName) {
+                _this.saveCharacters();
+            }
+        };
+        reader.readAsDataURL(file);
     };
     CharacterManager.prototype.handleFormSubmit = function (e) {
-        var _a;
+        var _a, _b;
         e.preventDefault();
         var form = e.target;
         var formData = new FormData(form);
@@ -38,8 +71,12 @@ var CharacterManager = /** @class */ (function () {
             age: formData.get('age') ? parseInt(formData.get('age')) : undefined,
             height: formData.get('height') ? parseFloat(formData.get('height')) : undefined,
             weight: formData.get('weight') ? parseFloat(formData.get('weight')) : undefined,
+            image: (_b = this.currentCharacter) === null || _b === void 0 ? void 0 : _b.image
         };
         this.saveCharacter(characterData);
+        var imagePreview = document.getElementById('image-preview');
+        if (imagePreview)
+            imagePreview.style.backgroundImage = '';
         form.reset();
     };
     CharacterManager.prototype.saveCharacter = function (character) {
@@ -96,7 +133,7 @@ var CharacterManager = /** @class */ (function () {
         });
     };
     CharacterManager.prototype.populateForm = function () {
-        var _a, _b, _c;
+        var _a, _b, _c, _d;
         var form = document.getElementById('user-form');
         if (!this.currentCharacter) {
             form.reset();
@@ -107,14 +144,26 @@ var CharacterManager = /** @class */ (function () {
         form.elements.namedItem('age').value = ((_a = this.currentCharacter.age) === null || _a === void 0 ? void 0 : _a.toString()) || '';
         form.elements.namedItem('height').value = ((_b = this.currentCharacter.height) === null || _b === void 0 ? void 0 : _b.toString()) || '';
         form.elements.namedItem('weight').value = ((_c = this.currentCharacter.weight) === null || _c === void 0 ? void 0 : _c.toString()) || '';
+        document.getElementById('character-image').value = '';
+        var preview = document.getElementById('image-preview');
+        if ((_d = this.currentCharacter) === null || _d === void 0 ? void 0 : _d.image) {
+            preview.style.backgroundImage = "url(".concat(this.currentCharacter.image, ")");
+        }
+        else {
+            preview.style.backgroundImage = '';
+        }
     };
     CharacterManager.prototype.clearDisplay = function () {
         var form = document.getElementById('user-form');
         form.reset();
+        var preview = document.getElementById('image-preview');
+        preview.style.backgroundImage = '';
     };
     CharacterManager.prototype.updateDisplay = function () {
         var _a, _b, _c;
         var greetingElement = document.getElementById('greeting-output');
+        var imagePreview = document.getElementById('image-preview');
+        var pictureCard = document.getElementById('picture-card');
         var infoElement = document.getElementById('user-info');
         var ageElement = document.getElementById('age-display');
         var heightElement = document.getElementById('height-display');
@@ -122,6 +171,10 @@ var CharacterManager = /** @class */ (function () {
         if (!this.currentCharacter) {
             if (greetingElement)
                 greetingElement.textContent = 'No Character Selected';
+            if (imagePreview)
+                imagePreview.style.backgroundImage = '';
+            if (pictureCard)
+                pictureCard.style.backgroundImage = '';
             if (infoElement)
                 infoElement.innerHTML = '<p>Select or Create your Character</p>';
             if (ageElement)
@@ -132,12 +185,15 @@ var CharacterManager = /** @class */ (function () {
                 weightElement.textContent = '--';
             return;
         }
-        var _d = this.currentCharacter, firstName = _d.firstName, lastName = _d.lastName, age = _d.age, height = _d.height, weight = _d.weight;
+        var _d = this.currentCharacter, firstName = _d.firstName, lastName = _d.lastName, age = _d.age, height = _d.height, weight = _d.weight, image = _d.image;
         if (greetingElement) {
-            greetingElement.textContent = "Welcome, ".concat(firstName, " ").concat(lastName, "!");
+            greetingElement.textContent = "".concat(firstName, " ").concat(lastName, "!");
         }
         if (infoElement) {
             infoElement.innerHTML = "\n                <h3>Character Details</h3>\n                <p>".concat(firstName, " ").concat(lastName, " is ready for an adventure!</p>");
+        }
+        if (pictureCard) {
+            pictureCard.style.backgroundImage = image ? "url(".concat(image, ")") : '';
         }
         if (ageElement) {
             ageElement.textContent = (_a = age === null || age === void 0 ? void 0 : age.toString()) !== null && _a !== void 0 ? _a : '--';
@@ -147,6 +203,9 @@ var CharacterManager = /** @class */ (function () {
         }
         if (weightElement) {
             weightElement.textContent = (_c = weight === null || weight === void 0 ? void 0 : weight.toFixed(1)) !== null && _c !== void 0 ? _c : '--';
+        }
+        if (imagePreview) {
+            imagePreview.style.backgroundImage = image ? "url(".concat(image, ")") : '';
         }
     };
     return CharacterManager;

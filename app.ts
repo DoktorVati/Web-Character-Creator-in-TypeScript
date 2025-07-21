@@ -3,6 +3,7 @@
 // Interface for a character
 interface Character {
     id: string;
+    image?: string; //Encoded in Base64
     firstName: string;
     lastName: string;
     age?: number;
@@ -42,6 +43,41 @@ class CharacterManager {
         this.selectElement.addEventListener('change', () => this.handleCharacterSelect());
         this.deleteButton.addEventListener('click', () => this.deleteCurrentCharacter());
         this.clearButton.addEventListener('click', () => this.clearDisplay());
+        document.getElementById('character-image')?.addEventListener('change', (e) => this.handleImageUpload(e));
+    }
+
+    private handleImageUpload(e: Event): void {
+        const input = e.target as HTMLInputElement;
+        const file = input.files?.[0];
+
+        if(!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const imageData = event.target?.result as string;
+            const preview = document.getElementById('image-preview') as HTMLDivElement;
+
+            preview.style.backgroundImage = `url(${imageData})`;
+
+
+            //create a temporary character if none exists
+            if (!this.currentCharacter) {
+                this.currentCharacter = {
+                    id: Date.now().toString(),
+                    firstName: '',
+                    lastName:'',
+                    image: imageData
+                };
+            } else {
+            this.currentCharacter.image = imageData;
+            }
+        
+            // Save immediately if character has name, otherwise wait for form submit
+            if (this.currentCharacter.firstName && this.currentCharacter.lastName) {
+                this.saveCharacters();
+            }
+        };
+        reader.readAsDataURL(file);
     }
 
     private handleFormSubmit(e: Event): void {
@@ -54,10 +90,15 @@ class CharacterManager {
             firstName: formData.get('firstName') as string,
             lastName: formData.get('lastName') as string,
             age: formData.get('age') ? parseInt(formData.get('age') as string): undefined,
-                height: formData.get('height') ? parseFloat(formData.get('height') as string): undefined,
-                weight: formData.get('weight') ? parseFloat(formData.get('weight') as string): undefined,
-            };
+            height: formData.get('height') ? parseFloat(formData.get('height') as string): undefined,
+            weight: formData.get('weight') ? parseFloat(formData.get('weight') as string): undefined,
+            image: this.currentCharacter?.image    
+        };
         this.saveCharacter(characterData);
+        const imagePreview = document.getElementById('image-preview');
+        if (imagePreview)
+                imagePreview.style.backgroundImage = '';
+
         form.reset();
     }
 
@@ -131,15 +172,29 @@ class CharacterManager {
         (form.elements.namedItem('age') as HTMLInputElement).value = this.currentCharacter.age?.toString() || '';
         (form.elements.namedItem('height') as HTMLInputElement).value = this.currentCharacter.height?.toString() || '';
         (form.elements.namedItem('weight') as HTMLInputElement).value = this.currentCharacter.weight?.toString() || '';
+
+        (document.getElementById('character-image') as HTMLInputElement).value = '';
+
+        const preview = document.getElementById('image-preview') as HTMLDivElement;
+        if (this.currentCharacter?.image) {
+            preview.style.backgroundImage = `url(${this.currentCharacter.image})`;
+        } else {
+            preview.style.backgroundImage = '';
+        }
     }
 
     private clearDisplay(): void {
         const form = document.getElementById('user-form') as HTMLFormElement;
         form.reset();
+
+        const preview = document.getElementById('image-preview') as HTMLDivElement;
+        preview.style.backgroundImage='';
     }
 
     private updateDisplay() {
         const greetingElement = document.getElementById('greeting-output');
+        const imagePreview = document.getElementById('image-preview');
+        const pictureCard = document.getElementById('picture-card');
         const infoElement = document.getElementById('user-info');
         const ageElement = document.getElementById('age-display');
         const heightElement = document.getElementById('height-display');
@@ -148,6 +203,12 @@ class CharacterManager {
         if (!this.currentCharacter) {
             if (greetingElement) 
                 greetingElement.textContent = 'No Character Selected';
+
+            if (imagePreview)
+                imagePreview.style.backgroundImage = '';
+
+            if(pictureCard)
+                pictureCard.style.backgroundImage = '';
 
             if (infoElement)
                 infoElement.innerHTML = '<p>Select or Create your Character</p>';
@@ -163,16 +224,20 @@ class CharacterManager {
         return;
         }
 
-        const {firstName, lastName, age, height, weight} = this.currentCharacter;
+        const {firstName, lastName, age, height, weight, image} = this.currentCharacter;
 
         if(greetingElement) {
-            greetingElement.textContent = `Welcome, ${firstName} ${lastName}!`;
+            greetingElement.textContent = `${firstName} ${lastName}!`;
         }
         
         if(infoElement) {
             infoElement.innerHTML = `
                 <h3>Character Details</h3>
                 <p>${firstName} ${lastName} is ready for an adventure!</p>`;
+        }
+
+        if (pictureCard) {
+            pictureCard.style.backgroundImage = image ? `url(${image})` : '';
         }
 
         if(ageElement) {
@@ -186,6 +251,10 @@ class CharacterManager {
         if(weightElement) {
             weightElement.textContent = weight?.toFixed(1) ?? '--';
         }
+
+        if (imagePreview) {
+            imagePreview.style.backgroundImage = image ? `url(${image})` : ''; 
+        } 
     }
 }
 
