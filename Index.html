@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Character Manager</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>Character Manager</h1>
+        </div>
+    </header>
+    
+    <main class="container">
+        <div class="profile-container">
+            <div class="character-display">
+                <div class="character-management">
+                    <select id="character-select" class="character-select">
+                        <option value="">Select a character</option>
+                    </select>
+                    <button id="delete-character" class="danger-btn">Delete</button>
+                </div>
+                
+                <div class="character-card">
+                    <div id="greeting-output"></div>
+                    <div id="user-info"></div>
+                    
+                    <div class="stats" id="stats-display">
+                        <div class="stat-item">
+                            <div class="stat-value" id="age-display">--</div>
+                            <div class="stat-label">Age</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="height-display">--</div>
+                            <div class="stat-label">Height (ft)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="weight-display">--</div>
+                            <div class="stat-label">Weight (lb)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="character-form">
+                <button id="clear-btn" class="danger-btn">Clear Sheet</button>
+                <h2>Create/Edit Character</h2>
+                <form id="user-form">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" name="firstName" required placeholder="Enter first name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" name="lastName" required placeholder="Enter last name">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="age">Age</label>
+                        <input type="number" id="age" name="age" min="1" max="150" placeholder="Enter age">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="height">Height (ft)</label>
+                        <input type="number" id="height" name="height" step="0.1" min="1" max="300" placeholder="Enter height in ft">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="weight">Weight (lb)</label>
+                        <input type="number" id="weight" name="weight" step="0.1" min="0" max="1000" placeholder="Enter weight in lb">
+                    </div>
+                    
+                    <button type="submit" id="save-btn">Save Character</button>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
