@@ -1,4 +1,5 @@
 // app.ts - TypeScript for a website
+// Remember to activate the tsc -watch in a command prompt 
 
 // Interface for a character
 interface Character {
@@ -9,6 +10,13 @@ interface Character {
     age?: number;
     height?: number;
     weight?: number;
+    str?: number;
+    dex?: number;
+    con?: number;
+    int?: number;
+    wis?: number;
+    cha?: number;
+    
 }
 
 // Class to handle greetings on the webpage
@@ -35,6 +43,7 @@ class CharacterManager {
     }
 
     private saveCharacters(): void {
+        console.log('Saving characters:', this.characters);
         localStorage.setItem('characters', JSON.stringify(this.characters));
     }
 
@@ -66,7 +75,13 @@ class CharacterManager {
                     id: Date.now().toString(),
                     firstName: '',
                     lastName:'',
-                    image: imageData
+                    image: imageData,
+                    str: 1,
+                    dex: 1,
+                    con: 1,
+                    wis: 1,
+                    cha: 1,
+                    int: 1,
                 };
             } else {
             this.currentCharacter.image = imageData;
@@ -92,14 +107,20 @@ class CharacterManager {
             age: formData.get('age') ? parseInt(formData.get('age') as string): undefined,
             height: formData.get('height') ? parseFloat(formData.get('height') as string): undefined,
             weight: formData.get('weight') ? parseFloat(formData.get('weight') as string): undefined,
-            image: this.currentCharacter?.image    
-        };
+            str: formData.get('str') ? parseInt(formData.get('str') as string): undefined,
+            dex: formData.get('dex') ? parseInt(formData.get('dex') as string): undefined,
+            con: formData.get('con') ? parseInt(formData.get('con') as string): undefined,
+            int: formData.get('int') ? parseInt(formData.get('int') as string): undefined,
+            wis: formData.get('wis') ? parseInt(formData.get('wis') as string): undefined,
+            cha: formData.get('cha') ? parseInt(formData.get('cha') as string): undefined,
+            image: this.currentCharacter?.image
+            };
         this.saveCharacter(characterData);
         const imagePreview = document.getElementById('image-preview');
         if (imagePreview)
                 imagePreview.style.backgroundImage = '';
 
-        form.reset();
+        //form.reset();
     }
 
     private saveCharacter(character: Character): void {
@@ -172,6 +193,12 @@ class CharacterManager {
         (form.elements.namedItem('age') as HTMLInputElement).value = this.currentCharacter.age?.toString() || '';
         (form.elements.namedItem('height') as HTMLInputElement).value = this.currentCharacter.height?.toString() || '';
         (form.elements.namedItem('weight') as HTMLInputElement).value = this.currentCharacter.weight?.toString() || '';
+        (form.elements.namedItem('str') as HTMLInputElement).value = this.currentCharacter.str?.toString() || '';
+        (form.elements.namedItem('dex') as HTMLInputElement).value = this.currentCharacter.dex?.toString() || '';
+        (form.elements.namedItem('con') as HTMLInputElement).value = this.currentCharacter.con?.toString() || '';
+        (form.elements.namedItem('int') as HTMLInputElement).value = this.currentCharacter.int?.toString() || '';
+        (form.elements.namedItem('wis') as HTMLInputElement).value = this.currentCharacter.wis?.toString() || '';
+        (form.elements.namedItem('cha') as HTMLInputElement).value = this.currentCharacter.cha?.toString() || '';
 
         (document.getElementById('character-image') as HTMLInputElement).value = '';
 
@@ -199,7 +226,13 @@ class CharacterManager {
         const ageElement = document.getElementById('age-display');
         const heightElement = document.getElementById('height-display');
         const weightElement = document.getElementById('weight-display');
-        
+        const strengthElement = document.getElementById('str-display');
+        const dexterityElement = document.getElementById('dex-display');
+        const constitutionElement = document.getElementById('con-display');
+        const intelligenceElement = document.getElementById('int-display');
+        const wisdomElement = document.getElementById('wis-display');
+        const charismaElement = document.getElementById('cha-display');
+
         if (!this.currentCharacter) {
             if (greetingElement) 
                 greetingElement.textContent = 'No Character Selected';
@@ -221,10 +254,29 @@ class CharacterManager {
             
             if (weightElement)
                 weightElement.textContent = '--';
-        return;
+
+            if (strengthElement)
+                strengthElement.textContent = '--';
+            
+            if (dexterityElement)
+                dexterityElement.textContent = '--';
+
+            if (constitutionElement)
+                constitutionElement.textContent = '--';
+
+            if (intelligenceElement)
+                intelligenceElement.textContent = '--';
+
+            if (wisdomElement)
+                wisdomElement.textContent = '--';
+
+            if (charismaElement)
+                charismaElement.textContent = '--';
+
+            return;
         }
 
-        const {firstName, lastName, age, height, weight, image} = this.currentCharacter;
+        const {firstName, lastName, age, height, weight, image, str, dex, con, int, wis, cha} = this.currentCharacter;
 
         if(greetingElement) {
             greetingElement.textContent = `${firstName} ${lastName}!`;
@@ -255,6 +307,31 @@ class CharacterManager {
         if (imagePreview) {
             imagePreview.style.backgroundImage = image ? `url(${image})` : ''; 
         } 
+
+        if(strengthElement) {
+            strengthElement.textContent = str?.toString() ?? '--';
+        }
+
+        if(dexterityElement) {
+            dexterityElement.textContent = dex?.toString() ?? '--';
+        }
+
+        if(constitutionElement) {
+            constitutionElement.textContent = con?.toString() ?? '--';
+        }
+
+        if(intelligenceElement) {
+            intelligenceElement.textContent = int?.toString() ?? '--';
+        }
+
+        if(wisdomElement) {
+            wisdomElement.textContent = wis?.toString() ?? '--';
+        }
+
+        if(charismaElement) {
+            charismaElement.textContent = cha?.toString() ?? '--';
+        }
+
     }
 }
 

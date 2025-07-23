@@ -16,7 +16,7 @@
     
     <main class="container">
         <div class="profile-container">
-            <div class="character-display">
+            <div class="character-display" name="character-display">
                 <div class="character-management">
                     <select id="character-select" class="character-select">
                         <option value="">Select a character</option>
@@ -27,9 +27,7 @@
                 <div class="character-card">
                     <div id="greeting-output"></div>
                     <center>
-                        <div class="picture-card" id="picture-card">
-                            
-                        </div>
+                        <div class="picture-card" id="picture-card"></div>
                     </center>
                     <div id="user-info"></div>
                     
@@ -47,6 +45,40 @@
                             <div class="stat-label">Weight (lb)</div>
                         </div>
                     </div>
+
+                    <div class="stats2" id="stats-display2">
+                        <div class="stat-item" >
+                            <div class="stat-value" id="statTitle">Stats</div>
+                        </div>
+                    </div>
+
+                    <div class="stats" id="stats-display1">
+                        <div class="stat-item" >
+                            <div class="stat-value" id="str-display">--</div>
+                            <div class="stat-label">Strength (STR)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="dex-display">--</div>
+                            <div class="stat-label">Dexterity (DEX)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="con-display">--</div>
+                            <div class="stat-label">Constitution (CON)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="int-display">--</div>
+                            <div class="stat-label">Intelligence (INT)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="wis-display">--</div>
+                            <div class="stat-label">Wisdom (WIS)</div>
+                        </div>
+                        <div class="stat-item">
+                            <div class="stat-value" id="cha-display">--</div>
+                            <div class="stat-label">Charisma (CHA)</div>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
             
@@ -84,7 +116,37 @@
                         <label for="weight">Weight (lb)</label>
                         <input type="number" id="weight" name="weight" step="0.1" min="0" max="1000" placeholder="Enter weight in lb">
                     </div>
+
                     
+                    <center>
+                        <div class="stat-value" name="centered">Stats</div>
+                    </center>
+                    
+                    <div class="form-group">
+                        <label for="str">Strength</label>
+                        <input type="number" id="str" name="str" min="1" max="18" placeholder="Enter Strength">
+                    </div>
+                    <div class="form-group">
+                        <label for="dex">Dexterity</label>
+                        <input type="number" id="dex" name="dex" min="1" max="18" placeholder="Enter Dexterity">
+                    </div>
+                    <div class="form-group">
+                        <label for="con">Constitution</label>
+                        <input type="number" id="con" name="con" min="1" max="18" placeholder="Enter Constitution">
+                    </div>
+                    <div class="form-group">
+                        <label for="int">Intelligence</label>
+                        <input type="number" id="int" name="int" min="1" max="18" placeholder="Enter Intelligence">
+                    </div>
+                    <div class="form-group">
+                        <label for="wis">Wisdom</label>
+                        <input type="number" id="wis" name="wis" min="1" max="18" placeholder="Enter Wisdom">
+                    </div>
+                    <div class="form-group">
+                        <label for="cha">Charisma</label>
+                        <input type="number" id="cha" name="cha" min="1" max="18" placeholder="Enter Charisma">
+                    </div>
+
                     <button type="submit" id="save-btn">Save Character</button>
                 </form>
             </div>

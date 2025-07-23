@@ -130,6 +130,11 @@ button:hover {
     gap: 1rem;
     margin-top: 1.5rem;
 }
+.stats2 {    
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
 
 .stat-item {
     background-color: var(--light-color);
@@ -137,6 +142,7 @@ button:hover {
     border-radius: 4px;
     text-align: center;
 }
+
 
 .stat-value {
     font-size: 1.5rem;
@@ -148,6 +154,7 @@ button:hover {
     font-size: 0.9rem;
     color: #7f8c8d;
 }
+
 
 @media (max-width: 768px) {
     .profile-container {
